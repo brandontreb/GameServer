@@ -1,4 +1,4 @@
 GameServer
 ==========
 
-python game server
+ python game server
