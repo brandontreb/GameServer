@@ -1,4 +1,2 @@
 GameServer
-==========
-
 python game server
