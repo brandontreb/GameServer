@@ -196,6 +196,8 @@ class GameLobby(MessageHandler):
 			roomServers = self.factory.rooms["RoomServer"].players
 			players = self.factory.rooms["Lobby"].players
 
+			openRoom = "Room"
+
 			for player in players:
 				# First check which server has an open room (highest priority)
 				playerServer = None
@@ -204,6 +206,7 @@ class GameLobby(MessageHandler):
 					if openRooms > 0:
 						playerServer = roomServer
 						print "Open room called " + roomServer.name
+						openRoom = roomServer.rooms[0].roomID
 						break
 				# Next pass, see which server has the LEAST amount of players
 				# This fires only if there are no open rooms				
@@ -219,7 +222,8 @@ class GameLobby(MessageHandler):
 				message = MessageWriter()
 				message.writeByte(settings.MESSAGE_PLAYER_JOIN_ROOMSERVER)
 				message.writeInt(playerServer.port)
-				message.writeString(playerServer.address)				
+				message.writeString(playerServer.address)
+				message.writeString(openRoom)
 				player.protocol.sendMessage(message)
 
 		# after we are done, update the server status
