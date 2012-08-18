@@ -14,7 +14,7 @@ class MessageWriter:
 	def writeFloat(self, value):
 		self.data = self.data + pack('<f', value)		
 
-	def writeString(self, value):
-		self.writeInt(len(value))
-		packStr = '!%ds' % (len(value))
+	def writeString(self, value):		
+		self.writeInt(len(value)+1)
+		packStr = '!%ds' % (len(value)+1)
 		self.data = self.data + pack(packStr, value)

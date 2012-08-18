@@ -80,7 +80,7 @@ class LobbyPlayerConnection(Protocol):
 
 	def processMessage(self, message):
 		messageId = message.readByte()
-
+		
 		# We need to process each message to check for player connected
 		# This is the only way to ensure player objects get constructed
 		if messageId == settings.MESSAGE_PLAYER_CONNECTED:
@@ -183,7 +183,7 @@ class GameLobby(MessageHandler):
 			for roomServer in roomServers:
 				roomServer.protocol.sendMessage(message)
 
-	def playerConnected(self, player):
+	def playerConnected(self, player):		
 		if player.roomID != "Lobby" and player.roomID != "RoomServer":
 			player.protocol.transport.loseConnection()
 			print "Kicked non-lobby/non-server player."
@@ -196,7 +196,7 @@ class GameLobby(MessageHandler):
 			roomServers = self.factory.rooms["RoomServer"].players
 			players = self.factory.rooms["Lobby"].players
 
-			openRoom = "Room"
+			openRoom = "Create"
 
 			for player in players:
 				# First check which server has an open room (highest priority)

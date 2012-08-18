@@ -14,6 +14,7 @@ from lobbyClient import LobbyClientFactory
 
 import messageHandler
 import settings
+import uuid
 
 class PlayerConnection(Protocol):
 
@@ -23,7 +24,7 @@ class PlayerConnection(Protocol):
 		self.state = "WAITING_FOR_PLAYERS"
 
 	def connectionMade(self):		
-		print "Connection Made" 		
+		yield
 
 	def connectionLost(self, reason):
 		self.log("Connection lost: %s" % str(reason))
@@ -101,9 +102,15 @@ class PlayerConnectionFactory(Factory):
 		self.playerCount = self.playerCount + 1
 
 		# Add the player to the room
-		if self.rooms.has_key(player.roomID) == False:
-			print "Creating Room " + str(player.roomID)			
-			self.rooms[player.roomID] = Room(player.roomID)
+		if self.rooms.has_key(player.roomID) == False or self.rooms[player.roomID].open == False:
+			if(player.roomID == "Create" or self.rooms[player.roomID].open == False):				
+				# Let the server create a room
+				player.roomID = str(uuid.uuid1())
+				self.rooms[player.roomID] = Room(player.roomID)
+				print "Creating Generated Room " + str(player.roomID)
+			else:				
+				print "Creating Room " + str(player.roomID)			
+				self.rooms[player.roomID] = Room(player.roomID)	
 
 		self.rooms[player.roomID].players.append(player)
 		player.room = self.rooms[player.roomID]
@@ -126,6 +133,9 @@ class PlayerConnectionFactory(Factory):
 				del self.rooms[roomID]
 
 		self.playerCount = self.playerCount - 1
+		
+		if self.lobbyClientFactory != None:
+			self.lobbyClientFactory.client.sendServerStatus(None)
 
 	def getServerStatus(self):		
 				
@@ -139,7 +149,12 @@ class PlayerConnectionFactory(Factory):
 
 		message = MessageWriter()
 		message.writeByte(settings.MESSAGE_SERVER_STATUS)
-		message.writeInt(self.playerCount)
+		try:
+			message.writeInt(self.playerCount)
+		except:
+			print "Unable to write player count " + str(self.playerCount)
+			message.writeInt(0)
+			
 		message.writeInt(openRoomCount)
 
 		for roomKey in self.rooms:

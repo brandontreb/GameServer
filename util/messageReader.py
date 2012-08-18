@@ -25,5 +25,6 @@ class MessageReader:
 		strLength = self.readInt()
 		unpackStr = '!%ds' % (strLength)
 		retval = unpack(unpackStr, self.data[self.offset:self.offset+strLength])[0]
+		retval = retval.rstrip("\0") # Remove null terminator
 		self.offset = self.offset + strLength
 		return retval
