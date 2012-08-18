@@ -6,7 +6,7 @@ class MessageHandler():
 		pass
 
 	def playerConnected(self, player):
-		pass
+		print "POOP"
 
 	def playerDisconnected(self,player):
-		pass
+		print "DPOOP"
