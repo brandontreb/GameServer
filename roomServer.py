@@ -103,7 +103,7 @@ class PlayerConnectionFactory(Factory):
 
 		# Add the player to the room
 		if self.rooms.has_key(player.roomID) == False or self.rooms[player.roomID].open == False:
-			if(player.roomID == "Create" or self.rooms[player.roomID].open == False):				
+			if(player.roomID == None or player.roomID == "Create" or (self.rooms.has_key(player.roomID) and self.rooms[player.roomID].open == False)):
 				# Let the server create a room
 				player.roomID = str(uuid.uuid1())
 				self.rooms[player.roomID] = Room(player.roomID)
