@@ -218,7 +218,7 @@ class GameLobby(MessageHandler):
 							playerServer = roomServer		
 
 				# At this point playerServer should not be None
-				print "Sending player to " + playerServer.address+ " " + str(playerServer.port)			
+				print "Sending player to " + playerServer.address+ " " + str(playerServer.port)	+ " room " + openRoom		
 				message = MessageWriter()
 				message.writeByte(settings.MESSAGE_PLAYER_JOIN_ROOMSERVER)
 				message.writeInt(playerServer.port)
