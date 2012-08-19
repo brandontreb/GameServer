@@ -128,9 +128,10 @@ class PlayerConnectionFactory(Factory):
 		
 		if player != None and player.roomID != None:
 			roomID = player.roomID
-			self.rooms[roomID].players.remove(player)
-			if len(self.rooms[roomID].players) == 0:
-				del self.rooms[roomID]
+			if(self.rooms.has_key(roomID)):
+				self.rooms[roomID].players.remove(player)
+				if len(self.rooms[roomID].players) == 0:
+					del self.rooms[roomID]
 
 		self.playerCount = self.playerCount - 1
 		
