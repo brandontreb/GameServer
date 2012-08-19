@@ -14,7 +14,8 @@ class MessageWriter:
 	def writeFloat(self, value):
 		self.data = self.data + pack('<f', value)		
 
-	def writeString(self, value):		
+	def writeString(self, value):
+		value = value + '\0'		
 		self.writeInt(len(value)+1)
 		packStr = '!%ds' % (len(value)+1)
 		self.data = self.data + pack(packStr, value)
